@@ -1,0 +1,126 @@
+Software Requirements Specification
+ExpenseMate — Personal Expense Manager
+Project Title
+ExpenseMate — Personal Expense Manager
+Document Type
+Software Requirements Specification (SRS)
+Architecture
+Client-Server (Local)
+Technology Stack
+Python + SQLite (alt: C# + SQL Server)
+Course
+Software Construction — Assignment 01
+Deadline
+18 September 2026
+Prepared By
+Member A (Requirements), Member B (Use Case Diagram)
+1. Introduction
+1.1 Purpose
+This document specifies the functional and non-functional requirements for ExpenseMate, a personal expense management system. It is intended for the development team, course instructor, and evaluators as the baseline for design, construction, and testing in subsequent assignment phases.
+1.2 Scope
+ExpenseMate is a local client-server desktop application that enables a single user to record income and expenses, set monthly category-wise budgets, receive budget alerts, import/export transaction data as CSV, and view visual analytics (charts) of spending. The system will be implemented using Python with an SQLite database. Multi-currency support and cloud backup are out of scope for the initial release and are planned as adaptive maintenance features.
+1.3 Definitions, Acronyms, and Abbreviations
+SRS — Software Requirements Specification
+FR — Functional Requirement
+NFR — Non-Functional Requirement
+CSV — Comma-Separated Values file format
+DB — Database (SQLite)
+UI — User Interface
+1.4 References
+Assignment 01 handout — Software Construction course; IEEE Std 830-1998 (SRS structure guideline).
+1.5 Overview
+Section 2 describes the product at a high level. Section 3 lists the specific functional and non-functional requirements and the use case diagram. Section 4 lists assumptions and constraints carried forward into the design phase.
+2. Overall Description
+2.1 Product Perspective
+ExpenseMate is a new, standalone system with a local client-server architecture: a lightweight UI client communicates with a backend logic/data layer that persists records in an SQLite database on the same machine.
+2.2 Product Functions (Summary)
+Record and categorize income and expense transactions
+Define and track monthly budgets per category
+Trigger budget alerts when spending thresholds are reached
+Import/export transactions via CSV
+Display category-wise analytics through visual charts
+Generate period summary reports
+2.3 User Classes and Characteristics
+Primary user: an individual managing personal finances, with basic computer literacy and no programming background. The system is designed for single-user, non-administrative use in this release.
+2.4 Operating Environment
+Desktop environment (Windows/Linux/macOS) with Python 3.x runtime and local SQLite database file; no external network dependency required for core functionality.
+2.5 Design and Implementation Constraints
+Must use Python + SQLite (or equivalent C# + SQL stack) as specified by the assignment.
+Must follow a layered/client-server architecture separating UI, business logic, and data access.
+Development and delivery timeline is bound by the six assignment phases and the 18 Sep 2026 deadline.
+2.6 Assumptions and Dependencies
+The user has the application installed locally; no multi-user concurrency is assumed.
+CSV files used for import follow a defined column format (date, amount, category, description).
+Charting relies on a Python charting library (e.g., Matplotlib) available in the runtime environment.
+3. Specific Requirements
+3.1 Functional Requirements
+ID
+Requirement Description
+Priority
+FR-1
+The system shall allow a user to register and log in with a username and password.
+High
+FR-2
+The system shall allow a user to record income transactions with amount, date, source, and category.
+High
+FR-3
+The system shall allow a user to record expense transactions with amount, date, category, and notes.
+High
+FR-4
+The system shall allow a user to define a monthly budget for each expense category.
+High
+FR-5
+The system shall generate a budget alert when spending in a category reaches or exceeds a configurable threshold (e.g., 80%/100%) of the budget.
+High
+FR-6
+The system shall allow a user to import transactions from a CSV file.
+Medium
+FR-7
+The system shall allow a user to export transactions and reports to a CSV file.
+Medium
+FR-8
+The system shall display category-wise spending analytics as visual charts (pie/bar/line).
+High
+FR-9
+The system shall allow a user to edit or delete a previously entered transaction.
+Medium
+FR-10
+The system shall persist all data locally in an SQLite database between sessions.
+High
+FR-11
+The system shall allow a user to generate a monthly/period summary report.
+Medium
+FR-12
+The system shall support multiple currencies for transaction entry (maintenance-phase feature).
+Low
+3.2 Non-Functional Requirements
+ID
+Category
+Requirement Description
+NFR-1
+Performance
+The system shall load the dashboard and render charts for up to 5,000 transactions within 2 seconds.
+NFR-2
+Usability
+The UI shall allow a new user to record a transaction in no more than 3 clicks/steps.
+NFR-3
+Reliability
+The system shall not lose recorded data in the event of an application crash (transaction-safe DB writes).
+NFR-4
+Portability
+The client-server components shall run on Windows, Linux, and macOS without code changes.
+NFR-5
+Security
+User passwords shall be stored using a salted hash; the local database shall not store passwords in plain text.
+NFR-6
+Maintainability
+The codebase shall follow a layered structure (UI / Logic / Data) with unit test coverage ≥ 70% per module.
+NFR-7
+Scalability
+The database schema shall support extension to multi-currency and cloud backup without redesign.
+3.3 Use Case Diagram
+The primary actor is the User, who interacts directly with the core use cases (registration, transaction entry, budgeting) and indirectly triggers the Receive Budget Alert use case when a budget threshold is crossed. CSV import/export, analytics, and reporting are supporting use cases available once the user is authenticated.
+Figure 1: Use Case Diagram — ExpenseMate
+4. Traceability & Sign-off
+Functional requirements FR-1 to FR-11 map to the core release; FR-12 (multi-currency) and cloud backup map to Phase 5 (Maintenance & Evolution) as adaptive maintenance items, consistent with the assignment's maintenance scope.
+Prepared for: Software Construction — Assignment 01 (ExpenseMate).
