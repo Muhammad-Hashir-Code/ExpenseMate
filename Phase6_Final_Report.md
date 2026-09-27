@@ -1,6 +1,5 @@
 <div align="center">
 
-<<<<<<< HEAD
 # 📄 Phase 6 — Final Project Report
 ### ExpenseMate — Personal Expense Manager
 
@@ -16,10 +15,6 @@
 </div>
 
 ---
-=======
-**Project Title:** ExpenseMate — Personal Expense Manager  
->>>>>>> d8620b90716b3ccf1051bea5a167c67eb94e3a04
-
 ## 1. 🧾 Executive Summary
 
 **ExpenseMate** is a fully functional, local client-server desktop application built to help individuals manage their personal finances. Developed over a structured **7-week, 6-phase software construction lifecycle**, the application successfully fulfills all core functional and non-functional requirements identified during Phase 1.
