@@ -1,0 +1,6 @@
+pytest>=7.0.0
+coverage>=7.0.0
+flake8>=6.0.0
+black>=23.0.0
+customtkinter>=5.2.0
+matplotlib>=3.7.0
