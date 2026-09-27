@@ -1,11 +1,6 @@
 # Phase 6 Deliverable: Final Project Report
 
 **Project Title:** ExpenseMate — Personal Expense Manager  
-**Course:** Software Construction  
-**Team Members:** Member A, Member B  
-**Deadline:** 18 September 2026  
-
----
 
 ## 1. Executive Summary
 ExpenseMate is a local, client-server desktop application designed to help individuals manage their personal finances. Developed over a 7-week period through six distinct phases of software construction, the application successfully implements all core functional requirements (income/expense tracking, budget alerting, CSV import/export, interactive charting) and non-functional requirements (high usability, fast load times, and transaction safety).
