@@ -1,5 +1,6 @@
 <div align="center">
 
+<<<<<<< HEAD
 # 📄 Phase 6 — Final Project Report
 ### ExpenseMate — Personal Expense Manager
 
@@ -15,6 +16,9 @@
 </div>
 
 ---
+=======
+**Project Title:** ExpenseMate — Personal Expense Manager  
+>>>>>>> d8620b90716b3ccf1051bea5a167c67eb94e3a04
 
 ## 1. 🧾 Executive Summary
 

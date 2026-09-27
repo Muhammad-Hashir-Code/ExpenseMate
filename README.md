@@ -322,12 +322,3 @@ This project is licensed under the **MIT License**.
 
 ---
 
-<div align="center">
-
-**Built with ❤️ for Software Construction — Assignment 01**
-
-*ExpenseMate v1.0.0 — All 6 Phases Complete*
-
-⭐ Star this repo if you found it helpful!
-
-</div>
