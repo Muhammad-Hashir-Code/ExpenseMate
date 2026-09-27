@@ -1,0 +1,101 @@
+Architecture & Construction Planning Document
+ExpenseMate — Personal Expense Manager
+Project Title
+ExpenseMate — Personal Expense Manager
+Document Type
+Architecture Document (Phase 2 Deliverable)
+Chosen Style
+Layered Client-Server Architecture (local)
+Technology Stack
+Python + SQLite (alt: C# + SQL Server)
+Course
+Software Construction — Assignment 01
+Deadline
+18 September 2026
+Prepared By
+Member A (Views), Member B (Standards, Tools & Timeline) — Both (Style Selection)
+1. Introduction
+This document is the Phase 2 deliverable of the ExpenseMate project. It builds on the requirements captured in the Phase 1 SRS and defines: (a) the chosen architectural style, (b) the system's Logical, Process, Physical, and Deployment views, (c) coding standards and tools, and (d) the project construction timeline (Gantt chart).
+2. Architectural Style Selection
+Three candidate styles were evaluated against ExpenseMate's requirements (single local user, modular budget/analytics logic, future cloud-backup extension):
+Style
+Advantages for ExpenseMate
+Limitations / Notes
+Layered
+Clear separation of concerns (UI/Logic/Data); easy to test each layer in isolation; matches team split (backend vs frontend).
+Strictly sequential calls between adjacent layers only; some overhead for simple operations.
+Client-Server
+Matches the assignment's stated architecture; supports a future networked/cloud-backup server without a redesign.
+For a single-user local app, the 'server' is logical rather than physical in the current release.
+Peer-to-Peer
+Not applicable — no peer nodes exchange data in this system.
+Rejected: adds unnecessary complexity; no multi-node data sharing requirement exists.
+Decision: ExpenseMate adopts a Layered Client-Server architecture. The system is internally layered (Presentation, Business Logic, Data Access) so modules can be developed, tested, and maintained independently; it is client-server at the boundary so a future cloud-backup server (Phase 5 maintenance scope) can be introduced without restructuring the client.
+3. Architectural Views
+3.1 Logical View
+The Logical View shows the system decomposed into three layers plus the persistent data store. The Presentation Layer handles all user interaction; the Business Logic Layer owns transaction rules, budget/alert logic, analytics, and CSV import/export; the Data Access Layer isolates all SQL/SQLite operations behind DAOs so the storage engine can be swapped with minimal impact on upper layers.
+Figure 1: Logical View — Layered Architecture
+3.2 Process View
+The Process View shows two concurrent runtime flows: the main UI process handling user-initiated transactions synchronously through the Business Logic Service down to the database, and a concurrent Budget Alert Monitor that evaluates category spend against thresholds after every expense insert and pushes an alert event back to the UI when a threshold is crossed.
+Figure 2: Process View — Runtime Interaction Sequence
+3.3 Physical View
+In the initial release, all software components run on a single physical node — the user's computer. The Python runtime hosts the application (UI + logic + data access) and the SQLite database file resides on local disk; CSV import/export interacts with the local file system.
+Figure 3: Physical View — Hardware / Software Mapping
+3.4 Deployment View
+The deployment diagram formalizes the physical view using UML notation: the Client PC node hosts the Python runtime and two artifacts (the application script and the SQLite database file). A Cloud Backup Server node is shown as a planned, out-of-scope extension for the Phase 5 maintenance stage, connected by a future network link.
+Figure 4: Deployment View — UML Deployment Diagram
+4. Coding Standards, Tools & Process
+The following standards and tools were agreed by both team members for Phase 3 (Coding & Unit Testing) onward, to keep contributions from both members consistent and mergeable.
+Aspect
+Standard / Tool
+Language & Version
+Python 3.11+ (single codebase for client-server local architecture).
+Style Guide
+PEP 8; enforced with the 'black' formatter and 'flake8' linter.
+Naming Conventions
+snake_case for functions/variables, PascalCase for classes, UPPER_CASE for constants; module names lowercase.
+Documentation
+Docstrings (Google style) on every public class/function; inline comments for non-obvious logic only.
+Version Control
+Git, hosted on GitHub. Feature-branch workflow: feature/<name> -> pull request -> review -> merge to main.
+Commit Convention
+Conventional Commits (feat:, fix:, test:, docs:, refactor:).
+Testing
+pytest for unit tests; target ≥70% coverage per module (tracked via coverage.py).
+IDE / Tools
+VS Code / PyCharm; DB Browser for SQLite; GitHub Projects (Kanban) for task tracking.
+Code Review
+Every pull request requires review/approval from the other team member before merge.
+5. Project Timeline / Gantt Chart
+The six assignment phases are scheduled across seven weeks, ending on the project deadline. Phase 3 (Coding & Unit Testing) is allotted the longest window given the split backend/frontend workload; Phase 6 concludes with the report and joint demo.
+Figure 5: ExpenseMate Project Gantt Chart (Phases 1–6)
+Phase
+Start
+End
+Ownership
+Phase 1: Problem Definition & Requirements
+Aug 03
+Aug 09
+Both (A: SRS text, B: use case diagram)
+Phase 2: Architecture & Construction Planning
+Aug 10
+Aug 16
+Both (A: views, B: standards & timeline)
+Phase 3: Coding & Unit Testing
+Aug 17
+Aug 30
+A: Backend, B: Frontend; both write unit tests
+Phase 4: Integration & System Testing
+Aug 31
+Sep 06
+A: Integration + complexity, B: System testing + fault rates
+Phase 5: Maintenance & Evolution
+Sep 07
+Sep 13
+Both (feature); A: bug fixes; B: code quality
+Phase 6: Final Presentation & Report
+Sep 14
+Sep 18
+B: report; Both: demo
+6. Summary
+This architecture document, together with the Phase 1 SRS, forms the baseline for Phase 3 construction: modules will be implemented per the Logical View's layer boundaries, following the agreed coding standards, and tracked against the Gantt chart timeline above.
