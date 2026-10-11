@@ -19,46 +19,55 @@ def get_connection() -> sqlite3.Connection:
 def init_db():
     """Initializes the database schema."""
     conn = get_connection()
-    cursor = conn.cursor()
+    try:
+        cursor = conn.cursor()
 
-    # 1. Users Table (FR-1, NFR-5)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL
-        )
-    """)
+        # 1. Users Table (FR-1, NFR-5)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL
+            )
+        """)
 
-    # 2. Transactions Table (FR-2, FR-3, FR-9)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS transactions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            type TEXT NOT NULL CHECK(type IN ('income', 'expense')),
-            amount REAL NOT NULL CHECK(amount > 0),
-            date TEXT NOT NULL,
-            category TEXT NOT NULL,
-            description TEXT,
-            FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
-        )
-    """)
+        # 2. Transactions Table (FR-2, FR-3, FR-9)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS transactions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                type TEXT NOT NULL CHECK(type IN ('income', 'expense')),
+                amount REAL NOT NULL CHECK(amount > 0),
+                date TEXT NOT NULL,
+                category TEXT NOT NULL,
+                description TEXT,
+                currency TEXT DEFAULT 'USD',
+                FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+        """)
 
-    # 3. Budgets Table (FR-4, FR-5)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS budgets (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            category TEXT NOT NULL,
-            monthly_limit REAL NOT NULL CHECK(monthly_limit > 0),
-            alert_threshold REAL NOT NULL CHECK(alert_threshold > 0 AND alert_threshold <= 1.0),
-            FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
-            UNIQUE(user_id, category)
-        )
-    """)
+        # Ensure currency column exists for previously created databases
+        cursor.execute("PRAGMA table_info(transactions)")
+        cols = [col[1] for col in cursor.fetchall()]
+        if cols and "currency" not in cols:
+            cursor.execute("ALTER TABLE transactions ADD COLUMN currency TEXT DEFAULT 'USD'")
 
-    conn.commit()
-    conn.close()
+        # 3. Budgets Table (FR-4, FR-5)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS budgets (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                category TEXT NOT NULL,
+                monthly_limit REAL NOT NULL CHECK(monthly_limit > 0),
+                alert_threshold REAL NOT NULL CHECK(alert_threshold > 0 AND alert_threshold <= 1.0),
+                FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+                UNIQUE(user_id, category)
+            )
+        """)
+
+        conn.commit()
+    finally:
+        conn.close()
 
 
 if __name__ == "__main__":

@@ -6,13 +6,18 @@ import os
 
 @pytest.fixture(autouse=True)
 def setup_db(tmp_path, monkeypatch):
+    import gc
     # Use a temporary database file for isolation
     db_file = tmp_path / "test_expensemate.db"
     monkeypatch.setattr(database, "DB_PATH", str(db_file))
     init_db()
     yield
+    gc.collect()
     if os.path.exists(db_file):
-        os.remove(db_file)
+        try:
+            os.remove(db_file)
+        except PermissionError:
+            pass
 
 def test_auth_service():
     # Test Registration
