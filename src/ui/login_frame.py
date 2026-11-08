@@ -1,12 +1,15 @@
 import customtkinter as ctk
 from tkinter import messagebox
-from src.logic.services import AuthService
+from src.controllers.auth_controller import AuthController
 
 
 class LoginFrame(ctk.CTkFrame):
-    def __init__(self, master, on_success_callback):
+    """Refactored Login and Registration view communicating strictly via AuthController."""
+
+    def __init__(self, master, on_success_callback, auth_controller=None):
         super().__init__(master)
         self.on_success = on_success_callback
+        self.auth_controller = auth_controller or AuthController()
 
         # Center container
         self.container = ctk.CTkFrame(
@@ -59,28 +62,22 @@ class LoginFrame(ctk.CTkFrame):
     def login(self):
         u = self.username_entry.get().strip()
         p = self.password_entry.get().strip()
-        if not u or not p:
-            messagebox.showerror("Error", "Please fill all fields")
-            return
 
-        user = AuthService.login(u, p)
-        if user:
-            self.on_success(user)
+        result = self.auth_controller.login(u, p)
+        if result.is_success:
+            self.on_success(result.data)
         else:
-            messagebox.showerror("Error", "Invalid username or password")
+            messagebox.showerror("Error", result.error_message)
 
     def register(self):
         u = self.username_entry.get().strip()
         p = self.password_entry.get().strip()
-        if not u or not p:
-            messagebox.showerror("Error", "Please fill all fields")
-            return
 
-        try:
-            user = AuthService.register(u, p)
+        result = self.auth_controller.register(u, p)
+        if result.is_success:
             messagebox.showinfo(
                 "Success", "Registration successful. Logging in..."
             )
-            self.on_success(user)
-        except ValueError:
-            messagebox.showerror("Error", "Username already exists")
+            self.on_success(result.data)
+        else:
+            messagebox.showerror("Error", result.error_message)
