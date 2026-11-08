@@ -16,10 +16,10 @@ class Transaction:
     amount: float
     date: str  # ISO format YYYY-MM-DD
     category: str
-    description: str = (
-        ""  # Represents 'source' for income or 'notes' for expense
-    )
+    description: str = ""
     currency: str = "USD"
+    payment_method: str = "Cash"
+    tags: str = ""
     id: Optional[int] = None
 
 
