@@ -1,12 +1,15 @@
-import customtkinter as ctk 
+import customtkinter as ctk
 from tkinter import messagebox
-from src.logic.services import BudgetService
+from src.controllers.budget_controller import BudgetController
 
 
 class BudgetView(ctk.CTkFrame):
-    def __init__(self, master, user):
+    """Refactored Budget Manager view communicating strictly via BudgetController."""
+
+    def __init__(self, master, user, budget_controller=None):
         super().__init__(master, fg_color="transparent")
         self.user = user
+        self.budget_controller = budget_controller or BudgetController()
 
         self.grid_columnconfigure(0, weight=1)
 
@@ -50,22 +53,25 @@ class BudgetView(ctk.CTkFrame):
         ).pack(pady=20, padx=20)
 
     def save_budget(self):
-        try:
-            cat = self.category.get()
-            lim = float(self.limit.get())
-            pct = float(self.threshold.get()) / 100.0
+        cat = self.category.get()
+        lim = self.limit.get()
+        pct = self.threshold.get()
 
-            if not cat:
-                messagebox.showerror("Error", "Category is required")
-                return
+        result = self.budget_controller.set_budget(
+            user_id=self.user.id,
+            category=cat,
+            limit_input=lim,
+            threshold_pct_input=pct,
+        )
 
-            BudgetService.set_budget(self.user.id, cat, lim, pct)
+        if result.is_success:
+            b = result.data
             messagebox.showinfo(
                 "Success",
-                f"Budget for {cat} saved! You'll be alerted at {pct*100}% usage.",
+                f"Budget for '{b.category}' saved! You'll be alerted at {b.alert_threshold * 100:.0f}% usage.",
             )
             self.category.delete(0, "end")
             self.limit.delete(0, "end")
             self.threshold.delete(0, "end")
-        except ValueError:
-            messagebox.showerror("Error", "Invalid numeric format")
+        else:
+            messagebox.showerror("Validation Error", result.error_message)
